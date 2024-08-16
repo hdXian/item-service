@@ -6,9 +6,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +31,60 @@ public class BasicItemController {
         Item item = itemRepository.findById(itemId);
         model.addAttribute("item", item);
         return "basic/item";
+    }
+
+    @GetMapping("/add")
+    public String addItemForm() {
+        return "basic/addForm";
+    }
+
+    // save new item into repository
+//    @PostMapping("/add")
+    public String addItemV1(@RequestParam("itemName") String itemName,
+                            @RequestParam("price") Integer price,
+                            @RequestParam("quantity") Integer quantity,
+                            Model model)
+    {
+        Item item = new Item();
+        item.setItemName(itemName);
+        item.setPrice(price);
+        item.setQuantity(quantity);
+
+        itemRepository.save(item);
+
+        model.addAttribute("item", item);
+
+        return "basic/item"; // show item info after add item
+    }
+
+//    @PostMapping("/add")
+    public String addItemV2(@ModelAttribute("item") Item item) {
+
+        itemRepository.save(item);
+
+        // functions of @ModelAttribute
+        // 1. bind request parameter to object properties
+        // 2. put object into model
+
+//        model.addAttribute("item", item);
+
+        return "basic/item"; // show item info after add item
+    }
+
+    // it's able to omit name value at @ModelAttribute.
+    // default rule of generate attribute name is class name with lowercase first letter.
+    // (ex. Item -> item, HelloData -> helloData)
+//    @PostMapping("/add")
+    public String addItemV3(@ModelAttribute Item item) {
+        itemRepository.save(item);
+        return "basic/item"; // show item info after add item
+    }
+
+    // In addition, it's able to omit @ModelAttribute.
+    @PostMapping("/add")
+    public String addItemV4(Item item) {
+        itemRepository.save(item);
+        return "basic/item"; // show item info after add item
     }
 
     @PostConstruct
