@@ -87,6 +87,20 @@ public class BasicItemController {
         return "basic/item"; // show item info after add item
     }
 
+    @GetMapping("/{itemId}/edit")
+    public String editForm(@PathVariable("itemId") Long itemId, Model model) {
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+        return "/basic/editForm";
+    }
+
+    @PostMapping("/{itemId}/edit")
+    public String editItem(@PathVariable("itemId") Long itemId, @ModelAttribute("item") Item updateParam) {
+        itemRepository.updateItem(itemId, updateParam);
+        // it's able to use @PathVariable at the return value
+        return "redirect:/basic/items/{itemId}";
+    }
+
     @PostConstruct
     public void init() {
         // called after DI
