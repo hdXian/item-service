@@ -97,7 +97,7 @@ public class BasicItemController {
     @PostMapping("/{itemId}/edit")
     public String editItem(@PathVariable("itemId") Long itemId, @ModelAttribute("item") Item updateParam) {
         itemRepository.updateItem(itemId, updateParam);
-        // it's able to use @PathVariable at the return value
+        // it's able to use @PathVariable at redirect url
         return "redirect:/basic/items/{itemId}";
     }
 
