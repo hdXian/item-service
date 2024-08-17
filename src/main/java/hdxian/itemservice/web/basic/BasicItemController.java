@@ -81,10 +81,18 @@ public class BasicItemController {
     }
 
     // In addition, it's able to omit @ModelAttribute.
-    @PostMapping("/add")
+//    @PostMapping("/add")
     public String addItemV4(Item item) {
         itemRepository.save(item);
         return "basic/item"; // show item info after add item
+    }
+
+    // apply PRG method
+    @PostMapping("/add")
+    public String addItemV5(@ModelAttribute("item") Item item) {
+        itemRepository.save(item);
+        // redirect to item info page
+        return "redirect:/basic/items/" + item.getId();
     }
 
     @GetMapping("/{itemId}/edit")
